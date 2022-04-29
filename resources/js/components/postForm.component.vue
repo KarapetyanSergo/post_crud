@@ -10,7 +10,6 @@
                 class="form"
                 type="text"
                 placeholder="Title"
-                required
             ></b-form-input>
 
             <b-form-textarea
@@ -22,7 +21,8 @@
                 max-rows="6"
             ></b-form-textarea>
 
-            <b-form-file v-model="form.image" accept="image/png, image/gif, image/jpeg" class="mt-3 form" plain></b-form-file>
+            <b-form-file v-model="form.image" accept="image/png, image/gif, image/jpeg" class="mt-3 form"
+                         plain></b-form-file>
 
             <div class="form">
                 <b-button @click="update" variant="success" v-if="cu==='update'">Save</b-button>
@@ -36,6 +36,7 @@
 
 <script>
 import Axios from "axios";
+import post from "../views/Post";
 
 export default {
     props: {
@@ -57,9 +58,21 @@ export default {
             error: false
         }
     },
+    mounted() {
+        this.checkMethod()
+    },
     methods: {
+        checkMethod() {
+            if (this.cu === 'update') {
+                Axios.get('/api/posts/' + this.$route.params.id)
+                    .then(res => {
+                        this.form.title = res.data.post.title;
+                        this.form.description = res.data.post.description;
+                    })
+            }
+        },
         store() {
-            if(!this.form.image){
+            if (!this.form.image) {
                 this.error = true;
                 return false;
             }
@@ -75,25 +88,24 @@ export default {
             })
                 .then(res => {
                     alert('Post was created successfully');
-                    this.$router.push('/post/'+res.data.id);
+                    this.$router.push('/post/' + res.data.id);
                 })
         },
         update() {
-            if(this.form.image) {
+            if (this.form.image) {
                 this.form.image = this.form.image.name
             } else {
                 delete this.form.image;
             }
 
-            const update = []
-            Axios.put('/api/posts/'+this.$route.params.id, this.form
-            , {
-                headers: {
-                    'Content-type': 'application/json'
-                }
-            })
+            Axios.put('/api/posts/' + this.$route.params.id, this.form
+                , {
+                    headers: {
+                        'Content-type': 'application/json'
+                    }
+                })
                 .then(res => {
-                    this.$router.push('/post/'+res.data.id);
+                    this.$router.push('/post/' + res.data.id);
                 })
         }
     }
@@ -101,12 +113,12 @@ export default {
 </script>
 
 <style scoped>
-    #form {
-        width: 90%;
-        margin: 0 auto;
-    }
+#form {
+    width: 90%;
+    margin: 0 auto;
+}
 
-    .form {
-        margin-top: 10px;
-    }
+.form {
+    margin-top: 10px;
+}
 </style>

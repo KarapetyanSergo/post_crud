@@ -9,7 +9,7 @@ class CommentStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'text' => 'required|string',
+            'text' => 'required|string|max:255',
             'post_id' => 'required|integer|exists:posts,id',
         ];
     }

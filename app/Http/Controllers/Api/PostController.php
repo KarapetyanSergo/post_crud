@@ -22,14 +22,9 @@ class PostController extends Controller
         return response()->json($service->store($request->validated()));
     }
 
-    public function show(Post $post): JsonResponse
+    public function show(Post $post, PostService $service): JsonResponse
     {
-        $comments = $post->comments()->get()->all();
-
-        return response()->json([
-            'post' => $post,
-            'comments' => $comments
-        ]);
+        return response()->json($service->show($post));
     }
 
     public function update(PostUpdateRequest $request, PostService $service, Post $post):JsonResponse

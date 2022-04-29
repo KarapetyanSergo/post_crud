@@ -10,7 +10,7 @@ class PostUpdateRequest extends FormRequest
     {
         return [
             'title' => 'string',
-            'description' => 'string',
+            'description' => 'string|max:255',
             'image' => 'string'
         ];
     }
